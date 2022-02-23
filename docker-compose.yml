@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+    database:
+        container_name: db
+        image: postgres
+        env_file:
+            - .env
+        volumes:
+            - database-data:/var/lib/postgresql/data/
+        ports:
+            - "5432:5432"
+
+    lokapp-api:
+        container_name: lokapp-api
+        image: ghcr.io/lokappio/lokapp-api:main
+        env_file:
+            - .env
+        ports: 
+            - "5000:5000"
+        links:
+            - database
+
+    lokapp-client:
+        container_name: lokapp-client
+        image: ghcr.io/lokappio/lokapp-client:main
+        env_file:
+            - .env
+        ports:
+            - "8080:80"
+
+volumes:
+    database-data:
